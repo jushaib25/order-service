@@ -79,7 +79,34 @@ Example business error:
 
 This solution validates first and mutating state only during the commit step. In a real system, order creation and wallet deduction should be wrapped in a database transaction so both operations either commit together or roll back together.
 
+
 ## Assumptions
 
 - `walletBalance` is a stored balance, not a real payment method.
 - Multiple order lines for the same menu item are allowed and are summed as provided.
+
+
+## Part 2: Production issue analysis
+
+### What could cause this issue?
+
+- Lack of atomicity can be the cause where the order is created, but wallet deduction fails.
+- Multiple requests read the same wallet balance simultaneously and pass validations, leading to overspending due to a race condition.
+- Service crashes or timeouts after order creation and before wallet deduction.
+
+### How would you debug it?
+
+- Trace the entire request lifecycle and check logs for order creation, wallet deduction, and the response returned for the particular request.
+- Check if there are any duplicate requests from the API gateway or logs.
+- Check if multiple orders were placed simultaneously for the same parent.
+- Check metrics, if configured, to find out which flow was triggered.
+- Try to reproduce the issue locally.
+
+### How would you prevent it in the future?
+
+- Use database transactions to ensure order creation and wallet deduction are atomic.
+- Apply row-level locking for concurrency control.
+- Prevent duplicate orders from retries.
+- Add metrics for monitoring and alerting.
+- Add clear logs to help with debugging.
+
