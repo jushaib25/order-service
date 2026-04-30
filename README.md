@@ -1,4 +1,4 @@
-# Flexischools Technical Test
+# Technical Test
 
 This repository contains a NestJS implementation for Part 1 of the test.
 
@@ -52,7 +52,7 @@ Example success response:
 }
 ```
 
-Example business error:
+Example error:
 
 ```json
 {
@@ -84,6 +84,9 @@ This solution validates first and mutating state only during the commit step. In
 
 - `walletBalance` is a stored balance, not a real payment method.
 - Multiple order lines for the same menu item are allowed and are summed as provided.
+
+### AI tools used
+- ChatGPT
 
 
 ## Part 2: Production issue analysis
